@@ -19,11 +19,18 @@ SOURCE = os.path.join(HERE, "entry.png")
 
 
 def main():
+    if not os.path.isfile(SOURCE):
+        print(f"error: source image not found: {SOURCE}", file=sys.stderr)
+        return 1
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR") or "/output"
     os.makedirs(out_dir, exist_ok=True)
     dest = os.path.join(out_dir, "entry.png")
     shutil.copyfile(SOURCE, dest)
     size = os.path.getsize(dest)
+    if size != os.path.getsize(SOURCE):
+        print(f"error: copied size {size} != source size "
+              f"{os.path.getsize(SOURCE)}", file=sys.stderr)
+        return 1
     print(dest)
     print(size)
     return 0
